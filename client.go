@@ -42,11 +42,12 @@ func main() {
 
 		log.Println("Done. Waiting for echo.")
 
-		buf := make([]byte, 1024)
-		_, err = io.ReadFull(stream, buf)
+		buff := make([]byte, len(message))
+		_, err = io.ReadFull(stream, buff)
 		if err != nil {
 			panic(err)
 		}
-		log.Printf("Client: Got '%s'\n", buf)
+
+		log.Printf("Client: Got '%s'\n", string(buff))
 	}
 }
