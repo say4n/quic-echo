@@ -29,25 +29,27 @@ func main() {
 		panic(err)
 	}
 
-	stream, err := sess.AcceptStream(context.Background())
-	if err != nil {
-		panic(err)
-	}
-
 	for {
-		buf := make([]byte, 1024)
-		_, err = io.ReadFull(stream, buf)
+		stream, err := sess.AcceptStream(context.Background())
 		if err != nil {
 			panic(err)
 		}
 
-		msg := string(buf)
-
-		log.Printf("Server: Got '%s'", msg)
-		log.Printf("Client: Sending '%s", msg)
-
-		_, err = stream.Write([]byte(msg))
+		// Echo through the loggingWriter
+		_, err = io.Copy(loggingWriter{stream}, stream)
 	}
+}
+
+// A wrapper for io.Writer that also logs the message.
+type loggingWriter struct{ io.Writer }
+
+func (w loggingWriter) Write(b []byte) (int, error) {
+	msg := string(b)
+
+	log.Printf("Server: Got '%s'\n", msg)
+	log.Printf("Server: Sending '%s", msg)
+
+	return w.Writer.Write(b)
 }
 
 // Setup a bare-bones TLS config for the server
