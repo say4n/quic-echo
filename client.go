@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"flag"
 	"io"
 	"log"
 	"strconv"
@@ -11,7 +12,13 @@ import (
 )
 
 func main() {
-	const addr = "localhost:4242"
+	hostName := flag.String("hostname", "localhost", "hostname/ip of the server")
+	portNum := flag.String("port", "4242", "port number of the server")
+	numEcho := flag.Int("necho", 100, "number of echos")
+
+	flag.Parse()
+
+	addr := *hostName + ":" + *portNum
 
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
@@ -49,5 +56,9 @@ func main() {
 		}
 
 		log.Printf("Client: Got '%s'\n", string(buff))
+
+		if counter == *numEcho {
+			break
+		}
 	}
 }

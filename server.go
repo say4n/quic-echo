@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
+	"flag"
 	"io"
 	"log"
 	"math/big"
@@ -15,9 +16,13 @@ import (
 )
 
 func main() {
-	hostName := "localhost"
-	portNum := "4242"
-	addr := hostName + ":" + portNum
+	hostName := flag.String("hostname", "localhost", "hostname/ip of the server")
+	portNum := flag.String("port", "4242", "port number of the server")
+
+	flag.Parse()
+
+	addr := *hostName + ":" + *portNum
+
 	log.Println("Server running @", addr)
 
 	listener, err := quic.ListenAddr(addr, generateTLSConfig(), nil)
