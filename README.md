@@ -1,8 +1,16 @@
 # quic-echo
 
-Echo client, server over the QUIC protocol.
+Echo server, client over the QUIC protocol.
 
-## server.go
+## build
+
+Run `make` in the root directory. Execute the server and client as two different processes in order.
+
+## files
+
+### server.go
+
+Creates a QUIC echo server.
 
 ```bash
 $ ./server -h
@@ -13,7 +21,9 @@ Usage of ./server:
         port number of the server (default "4242")
 ```
 
-## client.go
+### client.go
+
+Creates a QUIC client to talk to the echo server.
 
 ```bash
 $ ./client -h
